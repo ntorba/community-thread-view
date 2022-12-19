@@ -61,12 +61,14 @@ converter = DataFrameConverter(input_data_type="tweets", allow_duplicates=True)
 st.title("Community Thread View")
 
 # streamlit text input for a tweet url or a tweet id, if it is a url, it parses the id from the url
-tweet_input_id = st.text_input("Tweet URL or ID", "1603765939723534337")
+tweet_input_id = st.text_input("Enter any Tweet URL or ID", "1603765939723534337")
 
 params = st.experimental_get_query_params()
 
 if "tweet_id" in params:
     params_tweet_id = params["tweet_id"][0]
+else:
+    params_tweet_id = None
 
 if tweet_input_id != params_tweet_id:
     tweet_id = tweet_input_id
