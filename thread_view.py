@@ -15,6 +15,9 @@ from utils import get_cluster_info
 
 load_dotenv()
 
+twarc = Twarc2(bearer_token=os.environ["TWITTER_TOKEN"])
+converter = DataFrameConverter(input_data_type="tweets", allow_duplicates=True)   
+
 st.set_page_config(layout="wide")
 
 @st.cache
@@ -55,8 +58,6 @@ def build_convo_graph(convo_df):
         add_next_level(current_tweet, convo_df, reply_tree)
     return tree
 
-twarc = Twarc2(bearer_token=os.environ["TWITTER_TOKEN"])
-converter = DataFrameConverter(input_data_type="tweets", allow_duplicates=True)   
 
 st.title("Hive Cluster Thread View")
 st.write("""
