@@ -58,10 +58,18 @@ def build_convo_graph(convo_df):
 twarc = Twarc2(bearer_token=os.environ["TWITTER_TOKEN"])
 converter = DataFrameConverter(input_data_type="tweets", allow_duplicates=True)   
 
-st.title("Community Thread View")
+st.title("Hive Cluster Thread View")
+st.write("""
+You can use this app to learn about the structure of a conversation on Twitter.
+
+It answers the question **"Which communities are active in this thread?"** and **"Who are the most active users in this thread?**"
+
+At the bottom, it shows **all tweets from the thread in a tree structure**, so you can easily follow reply chains.
+
+""")
 
 # streamlit text input for a tweet url or a tweet id, if it is a url, it parses the id from the url
-tweet_input_id = st.text_input("Enter any Tweet URL or ID", "1603765939723534337")
+tweet_input_id = st.text_input("**Enter any Tweet URL or ID**", "1603765939723534337")
 
 params = st.experimental_get_query_params()
 
@@ -98,8 +106,6 @@ if tweet_id != conversation_id:
 
 convo_df = pd.concat(initial_tweets)
 
-st.write("conversation id:", conversation_id)
-
 import requests
 import streamlit.components.v1 as components
 
@@ -121,7 +127,7 @@ class Tweet(object):
     def component(self):
         return components.html(self.text, height=400, scrolling=True)
 
-st.subheader("The starter tweet (the tweet where tweet_id == conversation_id)")
+st.subheader("The starter tweet of the thread")
 t = Tweet(f"https://twitter.com/OReillyMedia/status/{conversation_id}").component()
 
 st.subheader("Reply Summary Stats")
@@ -152,6 +158,7 @@ num_tweets = convo_df.groupby("author.username").agg(
 user_clusters = borg_community_df.groupby("author.username")["clusters.name"].apply(list)
 num_tweets["clusters"] = user_clusters
 
+st.write("**tables of users, sorted by number of tweets in thread**")
 st.dataframe(num_tweets.reset_index(), use_container_width=True)
 
 community_grouping = borg_community_df.groupby('clusters.name').agg({'author.username': 'count'}, dropna=False).reset_index().sort_values('author.username', ascending=False)
@@ -172,7 +179,7 @@ st.plotly_chart(fig)
 
 
 
-st.subheader("Conversation Tree")
+st.subheader("Conversation Tree (starter tweet shown in green)")
 from rich.console import Console
 console = Console(record=True)
 with console.capture() as capture:
