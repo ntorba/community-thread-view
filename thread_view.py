@@ -69,7 +69,7 @@ At the bottom, it shows **all tweets from the thread in a tree structure**, so y
 """)
 
 # streamlit text input for a tweet url or a tweet id, if it is a url, it parses the id from the url
-tweet_input_id = st.text_input("**Enter any Tweet URL or ID**", "1603765939723534337")
+tweet_input_id = st.text_input("**Enter any Tweet URL or ID**", "1604841600416624642")
 
 params = st.experimental_get_query_params()
 
